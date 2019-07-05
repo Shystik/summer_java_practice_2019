@@ -1,6 +1,8 @@
 package com.practice.blueTeam.UI;
 
 
+import com.practice.blueTeam.DataBase.DataBase;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -8,7 +10,9 @@ import java.awt.event.MouseEvent;
 
 public class LevelSelectWindow extends JFrame {
     private static LevelSelectWindow selectWindow = new LevelSelectWindow();
-    // кнопка выбора уровня
+    // массив кнопок выбора уровня
+    private levelButton[] levelButtons = new levelButton[DataBase.getNumberOfLevels()];
+    // класс кнопки выбора уровня
     private class levelButton extends JButton{
         public int getLevelNumber() {
             return levelNumber;
@@ -39,19 +43,23 @@ public class LevelSelectWindow extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 selectWindow.setVisible(false);
-                levelWindows[levelNumber] = new LevelWindow();
+                levelWindows[levelNumber] = new LevelWindow(levelNumber);
                 levelWindows[levelNumber].setVisible(true);
             }
         };
     }
+    // метод отвечающий за создание массива кнопок
     private void createLevelButtons(){
         for (int i = 0; i < DataBase.getNumberOfLevels(); ++i) {
             levelButtons[i] = new levelButton(i);
         }
     }
+    // уровни
     private LevelWindow[]  levelWindows = new LevelWindow[DataBase.getNumberOfLevels()];
-    private levelButton[] levelButtons = new levelButton[DataBase.getNumberOfLevels()];
-
+    // кнопка закрытия приложения
+    private JButton closeButton = new JButton("Close");
+    // кнопка возврата в меню
+    private JButton returnButton = new JButton("Return to Main menu");
 
     public static LevelSelectWindow getSelectWindow() {
         return selectWindow;
@@ -62,27 +70,45 @@ public class LevelSelectWindow extends JFrame {
         super("Пятнашки");
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // настройки размера окна
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int sizeWidth = 800;
         int sizeHeight = 700;
         int locationX = (screenSize.width - sizeWidth) / 2;
         int locationY = (screenSize.height - sizeHeight) / 2;
         this.setBounds(locationX, locationY, sizeWidth, sizeHeight);
-
+        // инициализация mouseListner для closeButton
+        closeButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.exit(0);
+            }
+        });
+        // инициализация mouseListner для returnButton
+        returnButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                selectWindow.setVisible(false);
+                MainWindow.getUI().showUI();
+            }
+        });
         // инициализация массива levelButtons
         createLevelButtons();
+
         //// Настройки внешнего вида окна
         //Основная панель, на ней размещены другие панели
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(null);
         mainPanel.setSize(this.getSize());
-        // Панель с кнопками
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setBounds(mainPanel.getBounds());
-        GridBagLayout layout = new GridBagLayout();
-        buttonsPanel.setLayout(layout);
-        GridBagConstraints gbc = new GridBagConstraints();
 
+        // Панель с кнопками
+        JPanel levelPanel = new JPanel();
+        levelPanel.setBounds(mainPanel.getX(),mainPanel.getY(),mainPanel.getWidth() - 10,mainPanel.getHeight() - 100);
+        GridBagLayout layout = new GridBagLayout();
+        levelPanel.setLayout(layout);
+
+        // первоначальные настройки Сетки
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.ipadx = 300;
         gbc.ipady = 300;
@@ -92,23 +118,43 @@ public class LevelSelectWindow extends JFrame {
 
         //Добавление кнопок на панель
         for (int i = 0; i < levelButtons.length; i++) {
-            buttonsPanel.add(levelButtons[i]);
+            levelPanel.add(levelButtons[i]);
             if (i % 2 == 1) {
-                buttonsPanel.add(levelButtons[i], gbc);
+                levelPanel.add(levelButtons[i], gbc);
                 gbc.gridx = 0;
                 gbc.gridy++;
             } else {
-                buttonsPanel.add(levelButtons[i], gbc);
+                levelPanel.add(levelButtons[i], gbc);
                 gbc.gridx++;
-                ;
             }
         }
-        JScrollPane buttonsScroll = new JScrollPane(buttonsPanel);
-        buttonsScroll.setBounds(buttonsPanel.getBounds());
-        buttonsScroll.createVerticalScrollBar();
-        buttonsScroll.getVerticalScrollBar().setUnitIncrement(10);
-        buttonsScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        mainPanel.add(buttonsScroll,BorderLayout.CENTER);
+        // Обертка в JScrollPane
+        JScrollPane levelScroll = new JScrollPane(levelPanel);
+        levelScroll.setBounds(levelPanel.getBounds());
+        levelScroll.createVerticalScrollBar();
+        levelScroll.getVerticalScrollBar().setUnitIncrement(10);
+        levelScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        // добавление кнопок уровня на mainPanel
+        mainPanel.add(levelScroll,BorderLayout.CENTER);
+
+        // панель для кнопок навигации меню
+        JPanel menuPanel = new JPanel();
+        menuPanel.setLayout(new GridBagLayout());
+        menuPanel.setBounds(levelPanel.getX(), levelPanel.getHeight() -10,
+                levelPanel.getWidth(),mainPanel.getHeight() - levelPanel.getHeight());
+        // настройка расположения кнопок
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.ipadx = 0;
+        gbc.ipady = 15;
+        gbc.insets = new Insets(0,10,20,10);
+        gbc.anchor = GridBagConstraints.CENTER;
+        menuPanel.add(closeButton,gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 2;
+        menuPanel.add(returnButton, gbc);
+        mainPanel.add(menuPanel);
         this.getContentPane().add(mainPanel);
     }
 }
