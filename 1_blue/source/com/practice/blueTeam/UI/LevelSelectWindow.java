@@ -4,6 +4,7 @@ package com.practice.blueTeam.UI;
 import com.practice.blueTeam.DataBase.DataBase;
 
 import javax.swing.*;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -52,6 +53,9 @@ public class LevelSelectWindow extends JFrame {
     private void createLevelButtons(){
         for (int i = 0; i < DataBase.getNumberOfLevels(); ++i) {
             levelButtons[i] = new levelButton(i);
+            levelButtons[i].setIcon(DataBase.getLevelIcons()[i]);
+            levelButtons[i].setBorderPainted(false);
+            levelButtons[i].setFocusPainted(false);
         }
     }
     // уровни
@@ -68,6 +72,7 @@ public class LevelSelectWindow extends JFrame {
     private LevelSelectWindow() {
         //настройки основного окна
         super("Пятнашки");
+
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         // настройки размера окна
@@ -110,8 +115,8 @@ public class LevelSelectWindow extends JFrame {
         // первоначальные настройки Сетки
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.ipadx = 300;
-        gbc.ipady = 300;
+        gbc.ipadx = 0;
+        gbc.ipady = 0;
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(10,10,10,10);
@@ -156,5 +161,10 @@ public class LevelSelectWindow extends JFrame {
         menuPanel.add(returnButton, gbc);
         mainPanel.add(menuPanel);
         this.getContentPane().add(mainPanel);
+        for (int i = 0; i < levelButtons.length; i++) {
+            levelButtons[i].setSize(330,330);
+            levelButtons[i].setIcon(new ImageIcon(DataBase.getLevelIcons()[i].getImage().getScaledInstance(levelButtons[i].getWidth(),levelButtons[i].getHeight(),Image.SCALE_SMOOTH)));
+            levelButtons[i].setContentAreaFilled(false);
+        }
     }
 }
