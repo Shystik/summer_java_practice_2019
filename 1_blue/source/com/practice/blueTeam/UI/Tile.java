@@ -23,6 +23,12 @@ public class Tile extends JButton {
     }
     // конструктор
     public Tile(int numberOfTile) {
+        this.numberOfTile = numberOfTile;
+        if (numberOfTile == 15)
+            this.last = true;
+        else
+            this.last = false;
+
         setSize(50,50);
         if (this.last)
             setVisible(false);

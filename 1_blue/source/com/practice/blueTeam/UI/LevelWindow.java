@@ -15,7 +15,7 @@ public class LevelWindow extends JFrame {
     private JButton nextButton = new JButton("Next");
     private JButton prevButton = new JButton("Prev");
     private int levelNumber;
-    private Tile[] tiles = new Tile[15];
+    private Tile[] tiles = new Tile[16];
     private void setTiles() {
         for (int i = 0; i < 15; i++)
         {
