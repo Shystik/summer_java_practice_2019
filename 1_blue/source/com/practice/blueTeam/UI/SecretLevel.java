@@ -2,14 +2,12 @@ package com.practice.blueTeam.UI;
 
 import com.practice.blueTeam.DataBase.DataBase;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class LevelWindow extends JFrame {
+public class SecretLevel extends JFrame {
     private JButton closeButton = new JButton("Close");
     private JButton randomButton = new JButton("Random");
     private JButton buildButton = new JButton("Show Solution");
@@ -22,13 +20,13 @@ public class LevelWindow extends JFrame {
         for (int i = 0; i < 16; i++)
         {
             tiles[i] = new Tile(i);
-            tiles[i].setIcon(DataBase.getLevelTiles(levelNumber)[i]);
+            tiles[i].setIcon(DataBase.getsSecretTiles()[i]);
             tiles[i].setBorderPainted(false);
             tiles[i].setFocusPainted(false);
         }
     }
-    public  LevelWindow(){}
-    public LevelWindow(int levelNumber) {
+
+    public SecretLevel(int levelNumber) {
         super("Пятнашки");
         this.levelNumber = levelNumber;
         DataBase.setCurrentLevel(levelNumber);
@@ -53,7 +51,7 @@ public class LevelWindow extends JFrame {
         for (int i = 0; i < 16; i++)
         {
             tilesPanel.add(tiles[i]);
-            tiles[i].setIcon(new ImageIcon(DataBase.getLevelTiles(levelNumber)[i].getImage().getScaledInstance(tilesPanel.getWidth()/4, tilesPanel.getHeight()/4, Image.SCALE_SMOOTH)));
+            tiles[i].setIcon(new ImageIcon(DataBase.getsSecretTiles()[i].getImage().getScaledInstance(tilesPanel.getWidth()/4, tilesPanel.getHeight()/4, Image.SCALE_SMOOTH)));
         }
         mainPanel.add(tilesPanel);
         JPanel buttonsPanel = new JPanel();
@@ -79,7 +77,7 @@ public class LevelWindow extends JFrame {
         returnButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                DataBase.getLevelWindows(levelNumber).setVisible(false);
+                DataBase.getSecretLevel().setVisible(false);
                 MainWindow.getUI().setVisible(true);
             }
         });

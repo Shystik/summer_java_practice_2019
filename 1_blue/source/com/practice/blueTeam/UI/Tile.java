@@ -23,6 +23,7 @@ public class Tile extends JButton {
     }
     // конструктор
     public Tile(int numberOfTile) {
+        this.last = false;
         this.numberOfTile = numberOfTile;
         if (numberOfTile == 15)
             this.last = true;
