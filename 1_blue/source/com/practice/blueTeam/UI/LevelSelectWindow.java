@@ -48,6 +48,7 @@ public class LevelSelectWindow extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 selectWindow.setVisible(false);
                 DataBase.getLevelWindows(levelNumber).setVisible(true);
+                DataBase.randomizePuzzle(levelNumber);
             }
         };
     }
@@ -82,13 +83,8 @@ public class LevelSelectWindow extends JFrame {
         this.setFocusable(true);
         this.requestFocus();
     }
-
-    public LevelWindow getLevelWindows(int i) {
-        return levelWindows[i];
-    }
     // listner для секретного уровня
     // уровни
-    private LevelWindow[]  levelWindows = new LevelWindow[DataBase.getNumberOfLevels()];
     // кнопка закрытия приложения
     private JButton closeButton = new JButton("Close");
     // кнопка возврата в меню
@@ -209,6 +205,7 @@ public class LevelSelectWindow extends JFrame {
                 if (GameState.isCodeActivated()) {
                     selectWindow.setVisible(false);
                     DataBase.getSecretLevel().setVisible(true);
+                    DataBase.randomizeSecretPuzzle();
 
                 }
             }
