@@ -1,12 +1,14 @@
 package com.practice.blueTeam.DataBase;
 
+import com.practice.blueTeam.Algo.Puzzle;
+import com.practice.blueTeam.Algo.Wrap;
 import com.practice.blueTeam.UI.LevelWindow;
 import com.practice.blueTeam.UI.SecretLevel;
 import com.practice.blueTeam.UI.Tile;
-import com.sun.tools.javac.Main;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.xml.crypto.AlgorithmMethod;
 import javax.xml.crypto.Data;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -19,6 +21,71 @@ public class DataBase {
     public static DataBase getInstance() {
         return ourInstance;
     }
+    // API для работы с алгоритмом
+    public static void randomizePuzzle(int index) {
+        setTilesOrderOnTheScreen(Wrap.RandomizePuzzle(), index);
+        levelWindows[index].setTiles();
+    }
+
+    public static void nextStep(int index) {
+        //Wrap.setPuzzle(converTilesIntoINT(getTilesOrderOnTheScreen(index)));
+        setTilesOrderOnTheScreen(Wrap.StepForward(),index);
+        levelWindows[index].setTiles();
+    }
+
+    public static void prevStep(int index) {
+       // Wrap.setPuzzle(converTilesIntoINT(getTilesOrderOnTheScreen(index)));
+        setTilesOrderOnTheScreen(Wrap.StepBack(),index);
+        levelWindows[index].setTiles();
+    }
+
+    public static void showSolution(int index) {
+    }
+
+    public static void Move (int numberOfTile, int index){
+        //Wrap.setPuzzle(converTilesIntoINT(getTilesOrderOnTheScreen(index)));
+        setTilesOrderOnTheScreen(Wrap.MoveTile(numberOfTile), index);
+        levelWindows[index].setTiles();
+    }
+
+    public static void Move (int numberOfTile){
+//        Wrap.setPuzzle(converTilesIntoINT(getTilesOrderOnTheScreen(index)));
+        setSecretTilesOrderOnTheScreen(Wrap.MoveTile(numberOfTile));
+        secretLevel.setTiles();
+    }
+
+    // конвертирование в int
+    public static int[] converTilesIntoINT(Tile[] tiles){
+        int[] ints = new int[tiles.length];
+        for (int i = 0; i < tiles.length; i++){
+            ints[i] = tiles[i].getNumberOfTile();
+        }
+        return ints;
+    }
+
+    public static void randomizeSecretPuzzle() {
+        setSecretTilesOrderOnTheScreen(Wrap.RandomizePuzzle());
+        secretLevel.setTiles();
+    }
+
+    public static void secretNextStep() {
+        setSecretTilesOrderOnTheScreen(Wrap.StepForward());
+        secretLevel.setTiles();
+    }
+
+    public static void secretPrevStep() {
+        setSecretTilesOrderOnTheScreen(Wrap.StepBack());
+        secretLevel.setTiles();
+    }
+
+    public static void showSecretSolution(int index) {
+    }
+
+    public static void secretMove (int numberOfTile){
+        setSecretTilesOrderOnTheScreen(Wrap.MoveTile(numberOfTile));
+        secretLevel.setTiles();
+    }
+
     // количество уровней
     private static int numberOfLevels;
     public static int getNumberOfLevels() {
@@ -28,14 +95,14 @@ public class DataBase {
         DataBase.numberOfLevels = numberOfLevels;
     }
     // Текущий уровень
-    private static int currentLevel;
-    public static int getCurrentLevel() {
-        return currentLevel;
-    }
-    public static void setCurrentLevel(int currentLevel) {
-        DataBase.currentLevel = currentLevel;
-    }
+//    private static int currentLevel;
+//    public static int getCurrentLevel() {
+//        return currentLevel;
+    //    }
     // Иконки уровней
+//    public static void setCurrentLevel(int currentLevel) {
+//        DataBase.currentLevel = currentLevel;
+//    }
     private static ImageIcon[] levelIcons;
     public static ImageIcon[] getLevelIcons() {
         return levelIcons;
@@ -52,14 +119,25 @@ public class DataBase {
         return tilesIcons[levelNumber];
     }
     // порядок Тайлов
-    private static Tile[][] tilesOrderOnTheScreen = new Tile[numberOfLevels][16];
-    public static Tile[] getTilesOrderOnTheScreen() {
-        return tilesOrderOnTheScreen[currentLevel];
+    private static Tile[][] tilesOrderOnTheScreen;
+    public static Tile[] getTilesOrderOnTheScreen(int i) {
+        return tilesOrderOnTheScreen[i];
     }
-    public static void setTilesOrderOnTheScreen(int[] tilesOrderOnTheScreen) {
+    public static void setTilesOrderOnTheScreen(int[] tilesOrderOnTheScreen, int index) {
         for (int i = 0; i < 16; i++) {
-            DataBase.tilesOrderOnTheScreen[currentLevel][i] = new Tile(tilesOrderOnTheScreen[i]);
-            DataBase.tilesOrderOnTheScreen[currentLevel][i].setImageIcon(DataBase.tilesIcons[currentLevel][i]);
+            DataBase.tilesOrderOnTheScreen[index][i] = new Tile(tilesOrderOnTheScreen[i],index);
+            DataBase.tilesOrderOnTheScreen[index][i].setIcon(DataBase.tilesIcons[index][i]);
+        }
+    }
+     //порядок секретных тайлов
+    private static Tile[] secretTilesOrderOnTheScreen;
+    public static Tile[] getSecretTilesOrderOnTheScreen() {
+        return secretTilesOrderOnTheScreen;
+    }
+    public static void setSecretTilesOrderOnTheScreen(int[] tilesOrderOnTheScreen) {
+        for (int i = 0; i < 16; i++) {
+            DataBase.secretTilesOrderOnTheScreen[i] = new Tile(tilesOrderOnTheScreen[i], 0);
+            DataBase.secretTilesOrderOnTheScreen[i].setIcon(DataBase.secretTilesIcons[i]);
         }
     }
     // Уровни
@@ -74,7 +152,7 @@ public class DataBase {
     }
     // Рисунки тайлов секретного уровня
     private static ImageIcon[] secretTilesIcons;
-    public static ImageIcon[] getsSecretTiles() {
+    public static ImageIcon[] getSecretTiles() {
         return secretTilesIcons;
     }
 
@@ -92,7 +170,8 @@ public class DataBase {
         levelIcons = new ImageIcon[numberOfLevels];
         tilesIcons = new ImageIcon[numberOfLevels][16];
         levelWindows = new LevelWindow[numberOfLevels];
-
+        tilesOrderOnTheScreen = new Tile[numberOfLevels][16];
+        secretTilesOrderOnTheScreen = new Tile[16];
         secretTilesIcons = new ImageIcon[16];
         for (int i = 0; i < numberOfLevels+1; i++){
             if (i == numberOfLevels) {
@@ -105,7 +184,9 @@ public class DataBase {
                     url = this.getClass().getResource(path2);
                     secretTilesIcons[j] = new ImageIcon(url);
                 }
-                secretLevel = new SecretLevel(numberOfLevels+1);
+
+                secretLevel = new SecretLevel();
+            //    randomizeSecretPuzzle();
                 break;
             }
             String path = new String("/com/practice/blueTeam/resources/Level"+ (i+1)+ "/Image.jpeg");
@@ -117,8 +198,10 @@ public class DataBase {
                 tilesIcons[i][j] = new ImageIcon(url);
             }
         }
+
         for (int i = 0; i < numberOfLevels; i++) {
             levelWindows[i] = new LevelWindow(i);
+            randomizePuzzle(i);
         }
     }
 }
