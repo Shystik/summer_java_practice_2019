@@ -1,18 +1,19 @@
 package com.practice.blueTeam.UI;
 
-import com.practice.blueTeam.Algo.Main;
-import com.practice.blueTeam.Algo.Puzzle;
-import com.practice.blueTeam.Algo.Wrap;
 import com.practice.blueTeam.DataBase.DataBase;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Random;
 
-public class LevelWindow extends JFrame {
+public class LevelWindow extends JFrame
+        implements ActionListener, PropertyChangeListener {
     private JButton closeButton = new JButton("Close");
     private JButton randomButton = new JButton("Random");
     private JButton buildButton = new JButton("Show Solution");
@@ -22,6 +23,45 @@ public class LevelWindow extends JFrame {
     private JPanel tilesPanel = new JPanel();
     private int levelNumber;
     private Tile[] tiles;
+    private Task task;
+    private JProgressBar progressBar;
+    class Task extends SwingWorker<Void, Void> {
+        /*
+         * Main task. Executed in background thread.
+         */
+        @Override
+        public Void doInBackground() {
+            progressBar.setVisible(true);
+            Random random = new Random();
+            nextButton.setEnabled(false);
+            int progress = 0;
+            //Initialize progress property.
+            setProgress(0);
+
+            while (progress < 100) {
+                //Sleep for up to one second.
+                try {
+                    Thread.sleep(random.nextInt(100));
+                } catch (InterruptedException ignore) {}
+                //Make random progress.
+                progress += random.nextInt(30);
+                setProgress(Math.min(progress, 100));
+            }
+            return null;
+        }
+
+        /*
+         * Executed in event dispatching thread
+         */
+        @Override
+        public void done() {
+            DataBase.nextStep(levelNumber);
+            nextButton.setEnabled(true);
+            progressBar.setVisible(false);
+            setTiles();
+            setCursor(null); //turn off the wait cursor
+        }
+    }
     public void setTiles() {
         for (int i = 0; i < 16; i++)
         {
@@ -45,6 +85,10 @@ public class LevelWindow extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         tiles = new Tile[16];
+        progressBar = new JProgressBar(0,100);
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+        progressBar.setVisible(false);
 
         int sizeWidth = 800;
         int sizeHeight = 700;
@@ -52,10 +96,14 @@ public class LevelWindow extends JFrame {
         int locationY = (screenSize.height - sizeHeight) / 2;
         this.setBounds(locationX, locationY, sizeWidth, sizeHeight);
         JPanel mainPanel = new JPanel();
+
         tilesPanel = new JPanel();
         this.setContentPane(mainPanel);
         mainPanel.setLayout(null);
         mainPanel.setSize(this.getSize());
+        progressBar.setBounds(mainPanel.getWidth()/5, mainPanel.getHeight()/10, 200, 30);
+
+        mainPanel.add(progressBar);
         tilesPanel.setLayout(new GridLayout(4,4,0,0));
         tilesPanel.setLocation(mainPanel.getWidth()/16,mainPanel.getHeight()/6 );
         tilesPanel.setSize(400, 400);
@@ -74,15 +122,21 @@ public class LevelWindow extends JFrame {
         buttonsPanel.add(closeButton);
         buttonsPanel.add(returnButton);
         mainPanel.add(buttonsPanel);
-        nextButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                DataBase.nextStep(levelNumber);
-            }
-        });
+
+
+
+//        nextButton.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                DataBase.nextStep(levelNumber);
+//            }
+//        });
+        nextButton.setActionCommand("start");
+        nextButton.addActionListener(this);
         prevButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+
                 DataBase.prevStep(levelNumber);
             }
         });
@@ -105,5 +159,25 @@ public class LevelWindow extends JFrame {
                 DataBase.randomizePuzzle(levelNumber);
             }
         });
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        //Instances of javax.swing.SwingWorker are not reusuable, so
+        //we create new instances as needed.
+        task = new Task();
+
+        task.addPropertyChangeListener(this);
+        task.execute();
+
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("progress" == evt.getPropertyName()) {
+            int progress = (Integer) evt.getNewValue();
+            progressBar.setValue(progress);
+        }
     }
 }

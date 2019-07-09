@@ -40,7 +40,7 @@ public class Wrap {
 
     private static void addSolution() {
         while (solution == null) {
-            solution = new ArrayList<Puzzle>(puzzle.dijkstraSolve());
+            solution = new ArrayList<Puzzle>(puzzle.aStarSolve());
             if (solution == null) {
                 solution.trimToSize();
                 solution = new ArrayList<Puzzle>(puzzle.aStarSolve());
