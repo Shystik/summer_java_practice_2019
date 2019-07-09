@@ -16,7 +16,7 @@ public class LevelSelectWindow extends JFrame {
     private static LevelSelectWindow selectWindow = new LevelSelectWindow();
     // массив кнопок выбора уровня
 
-    private levelButton[] levelButtons = new levelButton[DataBase.getNumberOfLevels()];
+    private static levelButton[] levelButtons;
     // класс кнопки выбора уровня
     private class levelButton extends JButton{
         public int getLevelNumber() {
@@ -49,6 +49,7 @@ public class LevelSelectWindow extends JFrame {
                 selectWindow.setVisible(false);
                 DataBase.getLevelWindows(levelNumber).setVisible(true);
                 DataBase.randomizePuzzle(levelNumber);
+                focusReleased(e.getComponent());
             }
         };
     }
@@ -62,9 +63,7 @@ public class LevelSelectWindow extends JFrame {
         }
     }
 
-    @Override
-    public void update(Graphics g) {
-        super.update(g);
+    public static void update() {
         for (int i = 0; i < levelButtons.length; i++) {
             if (!GameState.getIsAvailable(i)) {
                 levelButtons[i].setEnabled(false);
@@ -75,11 +74,9 @@ public class LevelSelectWindow extends JFrame {
         }
     }
 
-    public void focusReleased()
+    public void focusReleased(Component component)
     {
-        for (int i = 0; i < this.getContentPane().getComponentCount(); i++){
-            this.getComponents()[i].setFocusable(false);
-        }
+        component.setFocusable(false);
         this.setFocusable(true);
         this.requestFocus();
     }
@@ -97,6 +94,7 @@ public class LevelSelectWindow extends JFrame {
     private LevelSelectWindow() {
         //настройки основного окна
         super("Пятнашки");
+        levelButtons = new levelButton[DataBase.getNumberOfLevels()];
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         // настройки размера окна
@@ -111,6 +109,7 @@ public class LevelSelectWindow extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.exit(0);
+                focusReleased(closeButton);
             }
         });
         // инициализация mouseListner для returnButton
@@ -119,6 +118,7 @@ public class LevelSelectWindow extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 selectWindow.setVisible(false);
                 MainWindow.getUI().showUI();
+                focusReleased(returnButton);
             }
         });
         // инициализация массива levelButtons
@@ -196,7 +196,7 @@ public class LevelSelectWindow extends JFrame {
             levelButtons[i].setIcon(new ImageIcon(DataBase.getLevelIcons()[i].getImage().getScaledInstance(levelButtons[i].getWidth(),levelButtons[i].getHeight(),Image.SCALE_SMOOTH)));
             levelButtons[i].setContentAreaFilled(false);
         }
-        focusReleased();
+        focusReleased(mainPanel);
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -210,5 +210,6 @@ public class LevelSelectWindow extends JFrame {
                 }
             }
         });
+
     }
 }

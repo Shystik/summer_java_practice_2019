@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="7" failures="0" name="com.practice.blueTeam.Algo.PuzzleTest" time="0.016" errors="0" skipped="0">
+<testsuite tests="15" failures="0" name="com.practice.blueTeam.Algo.PuzzleTest" time="0.008" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="12.0.1+12"/>
@@ -60,11 +60,19 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="isNotValidMove" time="0.016"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="isVaildMove1" time="0.008"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="isVaildMove2" time="0"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="shuffle1" time="0"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="shuffle2" time="0"/>
   <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="getTile" time="0"/>
   <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="puz" time="0"/>
-  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="move" time="0"/>
-  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="estimateError" time="0"/>
-  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="isVaildMove" time="0"/>
-  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="shuffle" time="0"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="move1" time="0"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="move2" time="0"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="move3" time="0"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="move4" time="0"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="isNotValidMove1" time="0"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="isNotValidMove2" time="0"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="isNotValidMove3" time="0"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="estimateError1" time="0"/>
+  <testcase classname="com.practice.blueTeam.Algo.PuzzleTest" name="estimateError2" time="0"/>
 </testsuite>

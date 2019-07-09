@@ -25,8 +25,10 @@ com\practice\blueTeam\UI\Tile$2.class
 com\practice\blueTeam\UI\LevelWindow$1.class
 com\practice\blueTeam\Algo\Wrap.class
 com\practice\blueTeam\UI\MainWindow.class
+com\practice\blueTeam\UI\LevelWindow$Task.class
 com\practice\blueTeam\UI\SecretLevel$5.class
 com\practice\blueTeam\Algo\Puzzle$1.class
 com\practice\blueTeam\UI\LevelWindow$3.class
+com\practice\blueTeam\UI\SecretLevel$Task.class
 com\practice\blueTeam\UI\SecretLevel$4.class
 com\practice\blueTeam\Algo\Puzzle.class

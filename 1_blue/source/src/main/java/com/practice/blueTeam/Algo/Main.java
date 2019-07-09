@@ -18,7 +18,7 @@ public class Main {
         /*
          Wrap.isSolved returns true or false
          Wrap.Step Back and Forward is for navigation, MoveTile for changing
-         All those methods returns current state through int[]
+         All those methods returns current state throught int[]
         */
         while (!Wrap.isSolved()) {
             index = in.nextInt();

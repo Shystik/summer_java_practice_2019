@@ -44,6 +44,10 @@ public class Tile extends JButton {
                 public void mouseClicked(MouseEvent e) {
                     DataBase.Move(numberOfTile);
                     DataBase.getSecretLevel().setTiles();
+                    if (DataBase.getIsSolved())
+                        DataBase.getSecretLevel().getNextButton().setEnabled(false);
+                    else
+                        DataBase.getSecretLevel().getNextButton().setEnabled(true);
                 }
             });
         } else {
@@ -52,9 +56,12 @@ public class Tile extends JButton {
                 public void mouseClicked(MouseEvent e) {
                     DataBase.Move(numberOfTile, levelNumber);
                     DataBase.getLevelWindows(levelNumber).setTiles();
+                    if (DataBase.getIsSolved(levelNumber))
+                        DataBase.getLevelWindows(levelNumber).getNextButton().setEnabled(false);
+                    else
+                        DataBase.getLevelWindows(levelNumber).getNextButton().setEnabled(true);
                 }
             });
         }
-
     }
 }

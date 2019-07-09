@@ -9,11 +9,20 @@ public class Wrap {
 
     private static ArrayList<int[]> states = new ArrayList<int[]>();
     private static ArrayList<Puzzle> solution = null;
-    public static boolean isStateSolved = false;
+    private static boolean isStateSolved = false;
 
     private static int currentState = -1;
 
     private static final int numOfShuffles = 25;
+
+    public static int[] showSolution() {
+        puzzle = new Puzzle();
+        if (solution != null) { clearSolution(); }
+        clearStates();
+        int[] temp = GetTilesArray(puzzle);
+        addState(temp);
+        return temp;
+    }
 
     private static int[] GetTilesArray(Puzzle puzzle) {
         int[] out = new int[16];
@@ -27,7 +36,7 @@ public class Wrap {
         return out;
     }
 
-    public static void clearStates() {
+    private static void clearStates() {
         states.clear();
         states.trimToSize();
         currentState = -1;
@@ -38,18 +47,20 @@ public class Wrap {
         currentState++;
     }
 
-    public static void addSolution() {
+    private static void addSolution() {
         while (solution == null) {
-            solution = new ArrayList<Puzzle>(puzzle.dijkstraSolve());
+
+            solution = new ArrayList<Puzzle>(puzzle.aStarSolve());
+
             if (solution == null) {
                 solution.trimToSize();
-                solution = new ArrayList<Puzzle>(puzzle.aStarSolve());
+                solution = new ArrayList<Puzzle>(puzzle.dijkstraSolve());
             }
         }
         isStateSolved = true;
 ;    }
 
-    public static void clearSolution() {
+    private static void clearSolution() {
         solution.clear();
         solution.trimToSize();
         solution = null;
@@ -146,9 +157,20 @@ public class Wrap {
     }
 
     public static boolean isSolved() {
-        if (puzzle.isSolved()) {
-            solution.clear();
-            solution = null;
+        int[][] buff = new int[4][4];
+        int n = 0;
+        int[] s = states.get(currentState);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                buff[i][j] = s[n];
+                n++;
+            }
+        }
+        Puzzle test = new Puzzle();
+        test.setTiles(buff);
+        if (test.isSolved()) {
+//            solution.clear();
+//            solution = null;
             return true;
         } else {
             return false;
