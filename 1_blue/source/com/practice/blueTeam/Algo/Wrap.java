@@ -15,6 +15,15 @@ public class Wrap {
 
     private static final int numOfShuffles = 25;
 
+    public static int[] showSolution() {
+        puzzle = new Puzzle();
+        if (solution != null) { clearSolution(); }
+        clearStates();
+        int[] temp = GetTilesArray(puzzle);
+        addState(temp);
+        return temp;
+    }
+
     private static int[] GetTilesArray(Puzzle puzzle) {
         int[] out = new int[16];
         int c = 0;
