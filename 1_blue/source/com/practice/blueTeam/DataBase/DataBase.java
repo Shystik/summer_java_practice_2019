@@ -83,7 +83,11 @@ public class DataBase {
 
     public static void secretMove (int numberOfTile){
         setSecretTilesOrderOnTheScreen(Wrap.MoveTile(numberOfTile));
+<<<<<<< HEAD
         secretLevel.setTiles();
+=======
+//        secretLevel.setTiles();
+>>>>>>> e3ce16220259126c775dd2e5de1a1da673adde7e
     }
 
     // количество уровней

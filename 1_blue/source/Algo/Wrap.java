@@ -128,6 +128,15 @@ public class Wrap {
             return s;
         }
     }
+    
+    public static int[] showSolution() {
+        puzzle = new Puzzle();
+        if (solution != null) { clearSolution(); }
+        clearStates();
+        int[] temp = GetTilesArray(puzzle);
+        addState(temp);
+        return temp;
+    }
 
     public static boolean isSolved() {
         if (puzzle.isSolved()) {
