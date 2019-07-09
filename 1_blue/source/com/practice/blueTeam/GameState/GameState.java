@@ -4,9 +4,6 @@ import com.practice.blueTeam.DataBase.DataBase;
 
 public class GameState {
     private static GameState state = new GameState();
-    public static GameState getState() {
-        return state;
-    }
     // код секретного уровня
     private static String secretCode = "aezakmi";
     private static int correctLength = 0;
@@ -31,6 +28,12 @@ public class GameState {
 
     public static boolean getIsAvailable(int i) {
         return isAvailable[i];
+    }
+
+    public static void setIsAvailable(int index) {
+        if (index == isAvailable.length)
+            return;
+        GameState.isAvailable[index] = true;
     }
 
     // массив пройденный уровней;

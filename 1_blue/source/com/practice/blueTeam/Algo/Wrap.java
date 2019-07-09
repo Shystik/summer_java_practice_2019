@@ -49,14 +49,12 @@ public class Wrap {
 
     private static void addSolution() {
         while (solution == null) {
-<<<<<<< HEAD
-            solution = new ArrayList<Puzzle>(puzzle.dijkstraSolve());
-=======
+
             solution = new ArrayList<Puzzle>(puzzle.aStarSolve());
->>>>>>> e3ce16220259126c775dd2e5de1a1da673adde7e
+
             if (solution == null) {
                 solution.trimToSize();
-                solution = new ArrayList<Puzzle>(puzzle.aStarSolve());
+                solution = new ArrayList<Puzzle>(puzzle.dijkstraSolve());
             }
         }
         isStateSolved = true;
@@ -159,9 +157,20 @@ public class Wrap {
     }
 
     public static boolean isSolved() {
-        if (puzzle.isSolved()) {
-            solution.clear();
-            solution = null;
+        int[][] buff = new int[4][4];
+        int n = 0;
+        int[] s = states.get(currentState);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                buff[i][j] = s[n];
+                n++;
+            }
+        }
+        Puzzle test = new Puzzle();
+        test.setTiles(buff);
+        if (test.isSolved()) {
+//            solution.clear();
+//            solution = null;
             return true;
         } else {
             return false;

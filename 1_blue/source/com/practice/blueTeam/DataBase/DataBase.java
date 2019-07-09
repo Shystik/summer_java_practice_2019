@@ -2,6 +2,8 @@ package com.practice.blueTeam.DataBase;
 
 import com.practice.blueTeam.Algo.Puzzle;
 import com.practice.blueTeam.Algo.Wrap;
+import com.practice.blueTeam.GameState.GameState;
+import com.practice.blueTeam.UI.LevelSelectWindow;
 import com.practice.blueTeam.UI.LevelWindow;
 import com.practice.blueTeam.UI.SecretLevel;
 import com.practice.blueTeam.UI.Tile;
@@ -21,46 +23,94 @@ public class DataBase {
     public static DataBase getInstance() {
         return ourInstance;
     }
+
+    public static boolean getIsSolved(int index) {
+        return isSolved[index];
+    }
+    public static boolean getIsSolved(){
+        return isSecretSolved;
+    }
+    private  static boolean isSecretSolved;
+    private static boolean[] isSolved;
     // API для работы с алгоритмом
     public static void randomizePuzzle(int index) {
         setTilesOrderOnTheScreen(Wrap.RandomizePuzzle(), index);
         levelWindows[index].setTiles();
+        if (Wrap.isSolved()) {
+            isSolved[index] = true;
+        }
+        else {
+            isSolved[index] = false;
+        }
     }
 
     public static void nextStep(int index) {
-        //Wrap.setPuzzle(converTilesIntoINT(getTilesOrderOnTheScreen(index)));
         setTilesOrderOnTheScreen(Wrap.StepForward(),index);
         levelWindows[index].setTiles();
+        if (Wrap.isSolved()) {
+            isSolved[index] = true;
+        }
+        else {
+            isSolved[index] = false;
+        }
     }
 
     public static void prevStep(int index) {
-       // Wrap.setPuzzle(converTilesIntoINT(getTilesOrderOnTheScreen(index)));
         setTilesOrderOnTheScreen(Wrap.StepBack(),index);
         levelWindows[index].setTiles();
-    }
-
-    public static void showSolution(int index) {
+        if (Wrap.isSolved()) {
+            isSolved[index] = true;
+        }
+        else {
+            isSolved[index] = false;
+        }
     }
 
     public static void Move (int numberOfTile, int index){
-        //Wrap.setPuzzle(converTilesIntoINT(getTilesOrderOnTheScreen(index)));
         setTilesOrderOnTheScreen(Wrap.MoveTile(numberOfTile), index);
         levelWindows[index].setTiles();
+        if (Wrap.isSolved()) {
+            GameState.setIsAvailable(index+1);
+            LevelSelectWindow.update();
+            isSolved[index] = true;
+        }
+        else {
+            isSolved[index] = false;
+        }
+    }
+
+    public static void AutoSolve() {
+        setSecretTilesOrderOnTheScreen(Wrap.showSolution());
+        secretLevel.setTiles();
+        if (Wrap.isSolved()) {
+            isSecretSolved = true;
+        }
+        else {
+            isSecretSolved = false;
+        }
+    }
+
+    public static void AutoSolve(int index) {
+        setTilesOrderOnTheScreen(Wrap.showSolution(), index);
+        levelWindows[index].setTiles();
+        if (Wrap.isSolved()) {
+            isSolved[index] = true;
+        }
+        else {
+            isSolved[index] = false;
+        }
     }
 
     public static void Move (int numberOfTile){
 //        Wrap.setPuzzle(converTilesIntoINT(getTilesOrderOnTheScreen(index)));
         setSecretTilesOrderOnTheScreen(Wrap.MoveTile(numberOfTile));
         secretLevel.setTiles();
-    }
-
-    // конвертирование в int
-    public static int[] converTilesIntoINT(Tile[] tiles){
-        int[] ints = new int[tiles.length];
-        for (int i = 0; i < tiles.length; i++){
-            ints[i] = tiles[i].getNumberOfTile();
+        if (Wrap.isSolved()) {
+            isSecretSolved = true;
         }
-        return ints;
+        else {
+            isSecretSolved = false;
+        }
     }
 
     public static void randomizeSecretPuzzle() {
@@ -71,23 +121,23 @@ public class DataBase {
     public static void secretNextStep() {
         setSecretTilesOrderOnTheScreen(Wrap.StepForward());
         secretLevel.setTiles();
+        if (Wrap.isSolved()) {
+            isSecretSolved = true;
+        }
+        else {
+            isSecretSolved = false;
+        }
     }
 
     public static void secretPrevStep() {
         setSecretTilesOrderOnTheScreen(Wrap.StepBack());
         secretLevel.setTiles();
-    }
-
-    public static void showSecretSolution(int index) {
-    }
-
-    public static void secretMove (int numberOfTile){
-        setSecretTilesOrderOnTheScreen(Wrap.MoveTile(numberOfTile));
-<<<<<<< HEAD
-        secretLevel.setTiles();
-=======
-//        secretLevel.setTiles();
->>>>>>> e3ce16220259126c775dd2e5de1a1da673adde7e
+        if (Wrap.isSolved()) {
+            isSecretSolved = true;
+        }
+        else {
+            isSecretSolved = false;
+        }
     }
 
     // количество уровней
@@ -171,6 +221,7 @@ public class DataBase {
         //
         // waiting for functional part to get tiles
         //
+        isSolved = new boolean[numberOfLevels];
         levelIcons = new ImageIcon[numberOfLevels];
         tilesIcons = new ImageIcon[numberOfLevels][16];
         levelWindows = new LevelWindow[numberOfLevels];
